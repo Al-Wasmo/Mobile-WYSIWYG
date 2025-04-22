@@ -4,6 +4,7 @@ import { Pane } from 'tweakpane';
 import { atom, useAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { DndContext, useDndMonitor, useDraggable, useDroppable } from '@dnd-kit/core';
+import { RectElemDefaultValues } from './Elems/Rect';
 
 const TooBoxPaneAtom = atom(undefined);
 
@@ -31,11 +32,7 @@ function Draggable({ id, text }) {
 
 
     id = id ? id : text;
-    const { attributes, listeners, setNodeRef, transform } = useDraggable({ id, data: {
-        width: 60,
-        height: 60,
-        color: "pink",
-    }});
+    const { attributes, listeners, setNodeRef, transform } = useDraggable({ id, data: {...RectElemDefaultValues}});
     const [isDragged, setIsDragged] = useState(false);
 
     const style = {

@@ -1,14 +1,24 @@
-import './App.css'
+import '../App.css'
 
 import { Pane } from 'tweakpane';
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
 import React, { useImperativeHandle, useState, forwardRef } from 'react';
 import { DndContext, useDroppable } from '@dnd-kit/core';
-import { makeHexDarker } from './utils';
-import { calcLayout, ComponentsAtom, SelectElemAtom } from './engine';
+import { makeHexDarker } from '../utils';
+import { calcLayout, ComponentsAtom, SelectElemAtom } from '../engine';
+import Yoga, { Edge, FlexDirection } from 'yoga-layout';
+import Rect, { RectNode } from './Rect';
 
 
+
+
+export function CanvaseNode(props) {
+    let node = Yoga.Node.create();
+    node.setFlexDirection(FlexDirection.Row);
+    node = RectNode(props,node);
+    return node;
+}
 
 function Canvas({ props }) {
     const setSelectElem = useSetAtom(SelectElemAtom);
@@ -18,12 +28,7 @@ function Canvas({ props }) {
     const RootComponent = Components["root"];
 
 
-    useEffect(() => {
-        console.log("ASD") 
-    },[])
 
-
-    console.log(RootComponent);
     // options
     const options = {
         color: RootComponent.color,
@@ -33,8 +38,8 @@ function Canvas({ props }) {
         padding_right: RootComponent.padding.right,
         padding_top: RootComponent.padding.top,
         padding_bottom: RootComponent.padding.bottom,
-        __bounds_width : [200,800],
-        __bounds_height : [200,800],
+        __options_width : {min: 200,max : 800},
+        __options_height : {min: 200, max : 800},
         __onChange_color: (color) => { Components["root"].color = color ; setComponents((old) => {  old = calcLayout(old); return { ...old, root : {...RootComponent}}}); },
         __onChange_width: (width) => { Components["root"].width = width ; setComponents((old) => {  old = calcLayout(old); return { ...old, root : {...RootComponent}}}); },
         __onChange_height: (height) => { Components["root"].height = height ; setComponents((old) => {  old = calcLayout(old); return { ...old, root : {...RootComponent}}}); },
@@ -64,18 +69,8 @@ function Canvas({ props }) {
         >
             {
                 Object.keys(Components).map((key) => {
-                    console.log()
                     if(key == "root") return; 
-                    return <div key={key} style={{
-                        position: "absolute",
-                        left: Components[key].x,
-                        top: Components[key].y,
-                        width: Components[key].width,
-                        height: Components[key].height,
-                        background: Components[key].color
-                    }}>
-                        
-                    </div>
+                    return <Rect key={key} id={key} {...Components[key]} />
                 })
             }
 

@@ -25,14 +25,19 @@ function SettingBox() {
             pane.children.forEach((input) => {
                 pane.remove(input);
             });
+
             for (let key of Object.keys(SelectedElem)) {
                 if (key.startsWith("__")) continue;
                 let option;
-                if(SelectedElem["__bounds_" + key]) {
-                    let bounds = SelectedElem["__bounds_" + key];
-                    option = pane.addBinding(SelectedElem, key,{min: bounds[0], max: bounds[1]});
+                if(key == "position") {
+                    option = pane.addBinding(SelectedElem, key, {options:  {static : "static",absolute:  "absolute"}});
                 } else {
-                    option = pane.addBinding(SelectedElem, key);
+                    if(SelectedElem["__options_" + key]) {
+                        let options = SelectedElem["__options_" + key];
+                        option = pane.addBinding(SelectedElem, key,{...options});
+                    } else {
+                        option = pane.addBinding(SelectedElem, key);
+                    }
                 }
                 option.on('change', (val) => { SelectedElem["__onChange_" + key](val.value); });
             

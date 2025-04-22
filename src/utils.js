@@ -15,9 +15,14 @@ function makeHexDarker(hex, amount = 20) {
         .slice(1);
 }
 
+function randNum(max) {
+    return Math.round(Math.random() * max);
+}
+
 
 export {
-    makeHexDarker
+    makeHexDarker,
+    randNum
 }
 
 
