@@ -11,7 +11,7 @@ function SettingBox() {
     const SelectedElem = useAtomValue(SelectElemAtom);
     const settingPane = useRef(null);
     const [SettingPane, setSettingPane] = useAtom(SettingPaneAtom);
-
+    const ref = useRef();
 
     useEffect(() => {
         let pane = SettingPane;
@@ -29,35 +29,39 @@ function SettingBox() {
             for (let key of Object.keys(SelectedElem)) {
                 if (key.startsWith("__")) continue;
                 let option;
-                if(key == "position") {
-                    option = pane.addBinding(SelectedElem, key, {options:  {static : "static",absolute:  "absolute"}});
+                if (key == "position") {
+                    option = pane.addBinding(SelectedElem, key, { options: { static: "static", absolute: "absolute" } });
                 } else {
-                    if(SelectedElem["__options_" + key]) {
+                    if (SelectedElem["__options_" + key]) {
                         let options = SelectedElem["__options_" + key];
-                        option = pane.addBinding(SelectedElem, key,{...options});
+                        option = pane.addBinding(SelectedElem, key, { ...options });
                     } else {
                         option = pane.addBinding(SelectedElem, key);
                     }
                 }
                 option.on('change', (val) => { SelectedElem["__onChange_" + key](val.value); });
-            
             }
+            ref.current.value = SelectedElem["code"];
         }
-
         return () => {
             pane.dispose()
         }
     }, [SelectedElem]);
-
-
-
-
     return (
         <div
             className='menubox'
             id='settingbox'
             ref={settingPane}
-        />
+
+        >
+            <textarea 
+                ref={ref}
+                name="code"
+                id=""
+                onChange={(val) => SelectedElem["__onChange_code"](val.target.value)}
+            />
+
+        </div>
     )
 }
 

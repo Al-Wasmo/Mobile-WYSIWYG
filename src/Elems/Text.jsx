@@ -1,24 +1,27 @@
 import { useAtom, useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { randNum } from "../utils";
+import "../App.css";
 import Yoga, { Edge, PositionType } from "yoga-layout";
 import { calcLayout, ComponentsAtom, SelectElemAtom } from "../engine";
 
 
-export const RectElemDefaultValues = {
+export const TextElemDefaultValues = {
     x: 0,
     y: 0,
-    width: 60,
-    height: 60,
-    color: "#0000ff",
+    width: 100,
+    height: 20,
+    color: "#f0f0f0",
     padding: { top: 0, left: 0, right: 0, bottom: 0 },
     margin: { top: 15, left: 15, right: 15, bottom: 15 },
     position: "static",
-    code: "...",
+    font_size : 16,
 };
 
 
-export function RectNode(props, node) {
+
+
+export function TextNode(props, node) {
     node = node == undefined ? Yoga.Node.create() : node;
     Yoga.Node.create().setPos
 
@@ -53,11 +56,11 @@ export function RectNode(props, node) {
     return node;
 }
 
-export default function Rect(props) {
+export default function Text(props) {
     const setSelectElem = useSetAtom(SelectElemAtom);
     const [Components, setComponents] = useAtom(ComponentsAtom);
 
-    const { x, y, width, height, color, padding, margin, position, id, code } = { ...RectElemDefaultValues, ...props };
+    const { x, y, width, height, color, padding, margin, position, font_size, id } = { ...TextElemDefaultValues, ...props };
 
 
 
@@ -72,25 +75,26 @@ export default function Rect(props) {
         padding_right: padding.right,
         padding_top: padding.top,
         padding_bottom: padding.bottom,
-        margin_left: margin.left,
-        margin_right: margin.right,
-        margin_top: margin.top,
-        margin_bottom: margin.bottom,
+        font_size: font_size,
+
+        // margin_left: margin.left,
+        // margin_right: margin.right,
+        // margin_top: margin.top,
+        // margin_bottom: margin.bottom,
         position: position,
-        code : code,
 
 
-
-        __options_width: {min: 10, max: 100},
-        __options_height: {min: 10, max: 100},
+        __options_width: {min: 10},
+        __options_height: {min: 10},
         __options_x: {step: 10},
         __options_y: {step: 10},
 
-        __onChange_x: (x) => { if(Components[id].position != "absolute") {return;}  Components[id].x = x; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
-        __onChange_y: (y) => { if(Components[id].position != "absolute") {return;} Components[id].y = y; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
+        __onChange_x: (val) => { if(Components[id].position != "absolute") {return;}  Components[id].x = val; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
+        __onChange_y: (val) => { if(Components[id].position != "absolute") {return;} Components[id].y = val; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
         __onChange_color: (color) => { Components[id].color = color; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
         __onChange_width: (width) => { Components[id].width = width; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
         __onChange_height: (height) => { Components[id].height = height; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
+        __onChange_font_size: (val) => { Components[id].font_size = val; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
         __onChange_padding_left: (val) => { Components[id].padding.left = val; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
         __onChange_padding_right: (val) => { Components[id].padding.right = val; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
         __onChange_padding_top: (val) => { Components[id].padding.top = val; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
@@ -100,29 +104,26 @@ export default function Rect(props) {
         __onChange_margin_top: (val) => { Components[id].margin.top = val; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
         __onChange_margin_bottom: (val) => { Components[id].margin.bottom = val; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
         __onChange_position: (val) => { Components[id].position = val; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } });  }, 
-        __onChange_code: (val) => { Components[id].code = val; setComponents((old) => { old = calcLayout(old); return { ...old, ...Components } }); },
 
     
     }
-
 
 
     const style = {
         left: x, top: y,
         width: width, height: height,
         backgroundColor: color,
-        padding: `${padding.top} ${padding.right} ${padding.bottom} ${padding.left}`,
+        padding: `${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px`,
         margin: `${margin.top} ${margin.right} ${margin.bottom} ${margin.left}`,
+        fontSize: font_size,
         position: "absolute",
     };
 
 
 
-    return <div className="elem-rect"
-        style={style}
+    return <input className="elem-text" style={style}
         onClick={(e) => {
             setSelectElem(options);
             e.stopPropagation();
-        }}
-    />
+        }} type="text" placeholder="text..." />
 }

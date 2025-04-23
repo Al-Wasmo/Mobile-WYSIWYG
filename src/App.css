@@ -116,3 +116,14 @@
   --tp-monitor-background-color: hsla(230, 15%, 30%, 0.10) !important; 
   --tp-monitor-foreground-color: hsla(230, 10%, 30%, 0.50) !important; 
 }
+
+
+
+.elem-text {
+  border: none;
+  font-size: 16px;
+}
+.elem-text:focus {
+  outline: 1px gray solid;
+
+}
