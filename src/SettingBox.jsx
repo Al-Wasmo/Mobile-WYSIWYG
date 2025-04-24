@@ -39,7 +39,9 @@ function SettingBox() {
                         option = pane.addBinding(SelectedElem, key);
                     }
                 }
-                option.on('change', (val) => { SelectedElem["__onChange_" + key](val.value); });
+                if(SelectedElem["__onChange_" + key]) {
+                    option.on('change', (val) => { SelectedElem["__onChange_" + key](val.value); });
+                }
             }
             ref.current.value = SelectedElem["code"];
         }

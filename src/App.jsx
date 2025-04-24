@@ -7,40 +7,41 @@ import { Pane } from 'tweakpane';
 import ToolBox, { data } from './ToolBox';
 import SettingBox from './SettingBox';
 import { DndContext } from '@dnd-kit/core';
-import { useSetAtom } from 'jotai';
-import { calcLayout, ComponentsAtom } from './engine';
+import { useAtom, useSetAtom } from 'jotai';
+import { calcLayout, ComponentsAtom, isRunningAtom } from './engine';
 import { DevTools } from 'jotai-devtools';
 import Canvas from './Elems/Canvas';
 
 import { Mosaic } from 'react-mosaic-component';
 import 'react-mosaic-component/react-mosaic-component.css';
-import { Dock } from 'react-dock';
-import { DndProvider, getBackendOptions, Tree } from '@minoru/react-dnd-treeview';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { TouchBackend } from 'react-dnd-touch-backend';
-
+import Runner from './Elems/Runner';
 
 
 
 
 function App() {
-
   const setComponents = useSetAtom(ComponentsAtom);
+  const [isRunning, setIsRunning] = useAtom(isRunningAtom);
 
   useEffect(() => {
-
-
-
-
-
-
-
     const params = new URLSearchParams(window.location.search);
     const data = params.get("data");
-    if(data) {
+    if (data) {
       setComponents(JSON.parse(data));
     }
-  },[]);
+
+    if (params.get("run")) {
+      setIsRunning(true)
+    } else {
+      setIsRunning(false);
+    }
+  }, []);
+
+  function onReturn() {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('run');
+    window.location.href = url.toString();
+  }
 
   function handleDragEnd(event) {
     const { over } = event;
@@ -61,14 +62,21 @@ function App() {
       <div style={{ position: "absolute" }}>
         <DevTools />
       </div>
-      <DndContext onDragEnd={handleDragEnd} className="asd">
-        <ToolBox />
-        <Canvas />
-        <SettingBox />
 
-       
+      {
+        !isRunning ? <>
+          <DndContext onDragEnd={handleDragEnd} className="asd">
+            <ToolBox />
+            <Canvas />
+            <SettingBox />
+          </DndContext>
 
-      </DndContext>
+        </>  : <div id='runner-container'>
+        <button onClick={() => onReturn()}>Return</button>
+        <Runner />
+        </div>
+
+      }
 
     </div>
   )
