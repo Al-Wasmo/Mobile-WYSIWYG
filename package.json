@@ -19,6 +19,7 @@
     "jotai-devtools": "^0.11.0",
     "leva": "^0.10.0",
     "os-browserify": "^0.3.0",
+    "prismjs": "^1.30.0",
     "process": "^0.11.10",
     "react": "^19.0.0",
     "react-dnd": "^16.0.1",
@@ -27,6 +28,7 @@
     "react-dock": "^0.8.0",
     "react-dom": "^19.0.0",
     "react-mosaic-component": "^6.1.1",
+    "react-simple-code-editor": "^0.14.1",
     "tweakpane": "^4.0.5",
     "ws": "^8.18.1",
     "yoga-layout": "^3.2.1"

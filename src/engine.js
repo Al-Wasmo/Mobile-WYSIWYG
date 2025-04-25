@@ -39,6 +39,12 @@ function calcLayout(components) {
   const url = window.location.pathname + `?data=${data}`;
   history.replaceState({}, "", url);
 
+  socket.send(JSON.stringify(
+    {type : "reload", layout : JSON.stringify(components)}
+  ));
+
+
+
   return components;
 }
 
@@ -122,30 +128,26 @@ export function onRun() {
 }
 
 
-// socket.send(JSON.stringify(
-//   {type : "reload", layout : JSON.stringify(components)}
-// ));
 
+const socket = new WebSocket("ws://192.168.224.156:8080")
 
-// const socket = new WebSocket("ws://192.168.193.156:8080")
+socket.onopen = () => {
+  socket.send(JSON.stringify(
+    { type: "connect", id: "editor" }
+  ));
+};
 
-// socket.onopen = () => {
-//   socket.send(JSON.stringify(
-//     { type: "connect", id: "editor" }
-//   ));
-// };
+socket.onmessage = (event) => {
+  console.log("Received:", event.data);
+};
 
-// socket.onmessage = (event) => {
-//   console.log("Received:", event.data);
-// };
+socket.onerror = (error) => {
+  console.error("WebSocket error:", error);
+};
 
-// socket.onerror = (error) => {
-//   console.error("WebSocket error:", error);
-// };
-
-// socket.onclose = () => {
-//   console.log("Connection closed");
-// };
+socket.onclose = () => {
+  console.log("Connection closed");
+};
 
 
 

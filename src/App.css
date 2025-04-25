@@ -122,6 +122,8 @@
 .elem-text {
   border: none;
   font-size: 16px;
+  overflow: hidden;
+  font-family: monospace;
 }
 .elem-text:focus {
   outline: 1px gray solid;

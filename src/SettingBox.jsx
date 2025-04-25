@@ -2,8 +2,15 @@ import './App.css'
 
 import { Pane } from 'tweakpane';
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SelectElemAtom } from './engine';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-lua';
+import 'prismjs/themes/prism.css'; //Example style, you can use another
+
+
 
 const SettingPaneAtom = atom(undefined);
 
@@ -11,8 +18,8 @@ function SettingBox() {
     const SelectedElem = useAtomValue(SelectElemAtom);
     const settingPane = useRef(null);
     const [SettingPane, setSettingPane] = useAtom(SettingPaneAtom);
-    const ref = useRef();
 
+    const [code, setCode] = useState(``);
     useEffect(() => {
         let pane = SettingPane;
         if (settingPane.current) {
@@ -39,11 +46,16 @@ function SettingBox() {
                         option = pane.addBinding(SelectedElem, key);
                     }
                 }
-                if(SelectedElem["__onChange_" + key]) {
-                    option.on('change', (val) => { SelectedElem["__onChange_" + key](val.value); });
+                if (SelectedElem["__onChange_" + key]) {
+                    option.on('change', (val) => { 
+                        SelectedElem["__onChange_" + key](val.value); });
                 }
             }
-            ref.current.value = SelectedElem["code"];
+            setCode("");
+            if(Object.keys(SelectedElem ?? {}).includes("code")) {
+                setCode(SelectedElem["code"]);
+            }
+            // ref.current.value = SelectedElem["code"];
         }
         return () => {
             pane.dispose()
@@ -56,12 +68,22 @@ function SettingBox() {
             ref={settingPane}
 
         >
-            <textarea 
+            <Editor
+                value={code}
+                onValueChange={code => { setCode(code); SelectedElem["__onChange_code"](code);}}
+                highlight={code => highlight(code, languages.lua)}
+                padding={10}
+                style={{
+                    fontFamily: '"Fira code", "Fira Mono", monospace',
+                    fontSize: 12,
+                }}
+            />
+            {/* <textarea
                 ref={ref}
                 name="code"
                 id=""
-                onChange={(val) => SelectedElem["__onChange_code"](val.target.value)}
-            />
+                onChange={}
+            /> */}
 
         </div>
     )
