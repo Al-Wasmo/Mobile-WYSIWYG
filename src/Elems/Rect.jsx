@@ -156,8 +156,8 @@ export default function Rect(props) {
         position: position,
         code: code,
 
-        __options_width: { min: 10, max: 100 },
-        __options_height: { min: 10, max: 100 },
+        __options_width: { min: 10, max: 500 },
+        __options_height: { min: 10, max: 500 },
         __options_x: { step: 10 },
         __options_y: { step: 10 },
         __options_id: { readonly: true },
