@@ -129,7 +129,7 @@ export function onRun() {
 
 
 
-const socket = new WebSocket("ws://192.168.194.156:8080")
+const socket = new WebSocket("ws://192.168.19.156:8080")
 
 socket.onopen = () => {
   socket.send(JSON.stringify(

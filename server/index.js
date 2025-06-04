@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 
-const IP = "192.168.194.156";
+const IP = "192.168.19.156";
 const wss = new WebSocket.Server({ host: IP, port: 8080 });
 let Clients = {};
 
